@@ -1,0 +1,45 @@
+name: Build and run tests
+
+on: [push]
+
+jobs:
+  dev-system-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install GCC
+        run: |
+          sudo apt-get install gcc
+      - name: Build tests (development target)
+        run: |
+          make tests
+      - name: Run tests
+        run: |
+          ./tests -r 3
+
+
+  # todo: Publish the resulting program to github releases when more polished and working
+  amiga-m68k-build:
+    runs-on: ubuntu-latest
+    container: themkat/amigaosm68k:latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Build tests
+        run: |
+          make tests -e OS=os3
+
+
+  amiga-ppc-build:
+    runs-on: ubuntu-latest
+    container: amigadev/crosstools:ppc-amigaos
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Build tests
+        run: |
+          make tests -e OS=os4
