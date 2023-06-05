@@ -17,7 +17,7 @@ jobs:
           make tests
       - name: Run tests
         run: |
-          ./tests -r 3
+          ./tests-dev -r 3
 
 
   # todo: Publish the resulting program to github releases when more polished and working
