@@ -9,6 +9,7 @@ CFLAGS :=
 LDFLAGS :=
 
 SRC_DIR := src
+TESTS_DIR := tests
 BUILD_DIR := build-$(OS)
 
 ifeq ($(OS), os3)
@@ -20,6 +21,19 @@ ifeq ($(OS), os4)
 endif
 
 
+# libraries (mostly test related)
+UNITY_FRAMEWORK_SRC := unity/src
+UNITY_FIXTURE_SRC   := unity/extras/fixture/src
+
+UNITY_OBJECTS := unity.o unity_fixture.o
+AmiEnvMon: _main_platform_check $(BUILD_DIR) $(BUILD_DIR)/httpget.o $(BUILD_DIR)/main.o
+	@echo "todo. actually do main stuff"
+
+_main_platform_check:
+	@if [ "dev" = $(OS) ]; then\
+		echo "Building main program for dev target is NOT allowed"; \
+		exit 1; \
+	fi
 tests: $(BUILD_DIR) $(BUILD_DIR)/main.o
 	$(CC) $(BUILD_DIR)/main.o -o tests
 
