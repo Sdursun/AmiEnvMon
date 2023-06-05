@@ -46,4 +46,4 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	@rm -rf build-dev build-os3 build-os4
-	@rm tests
+	@rm -f tests-os3 tests-os4 tests-dev
