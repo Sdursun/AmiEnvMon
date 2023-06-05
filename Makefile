@@ -34,15 +34,16 @@ _main_platform_check:
 		echo "Building main program for dev target is NOT allowed"; \
 		exit 1; \
 	fi
+
 tests: $(BUILD_DIR) $(BUILD_DIR)/main.o
-	$(CC) $(BUILD_DIR)/main.o -o tests
+	$(CC) $(BUILD_DIR)/main.o -o tests-$(OS)
 
 build-$(OS):
-	mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -c $< -o $@
 
 clean:
-	rm -rf build-dev build-os3 build-os4
-	rm tests
+	@rm -rf build-dev build-os3 build-os4
+	@rm tests
