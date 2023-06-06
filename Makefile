@@ -22,12 +22,20 @@ endif
 
 
 # libraries (mostly test related)
+JSON_LIB_SRC        := jsonlib
 UNITY_FRAMEWORK_SRC := unity/src
 UNITY_FIXTURE_SRC   := unity/extras/fixture/src
 
 UNITY_OBJECTS := unity.o unity_fixture.o
+UNITY_OBJECTS := $(foreach obj,$(UNITY_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj))) 
+
+TEST_OBJECTS := envmondata.o envmondata_test.o testmain.o
+TEST_OBJECTS := $(foreach obj,$(TEST_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj))) 
+MAIN_OBJECTS := 
+
+
 AmiEnvMon: _main_platform_check $(BUILD_DIR) $(BUILD_DIR)/httpget.o $(BUILD_DIR)/main.o
-	@echo "todo. actually do main stuff"
+	$(CC) $(BUILD_DIR)/httpget.o $(BUILD_DIR)/main.o -o AmiEnvMon -lnet -mcrt=clib2 -m68020-60 -msoft-float
 
 _main_platform_check:
 	@if [ "dev" = $(OS) ]; then\
@@ -35,14 +43,26 @@ _main_platform_check:
 		exit 1; \
 	fi
 
-tests: $(BUILD_DIR) $(BUILD_DIR)/main.o
-	$(CC) $(BUILD_DIR)/main.o -o tests-$(OS)
+tests: $(BUILD_DIR) $(UNITY_OBJECTS) $(TEST_OBJECTS)
+	$(CC) $(UNITY_OBJECTS) $(TEST_OBJECTS) -o tests-$(OS)
 
 build-$(OS):
 	@mkdir -p $(BUILD_DIR)
 
+# TODO: any way to combine the compilations?
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) -c $< -o $@ -I$(JSON_LIB_SRC)
+
+$(BUILD_DIR)/%.o: $(TESTS_DIR)/%.c
+	$(CC) -c $< -I$(SRC_DIR) -I$(UNITY_FRAMEWORK_SRC) -I$(UNITY_FIXTURE_SRC) -DUNITY_FIXTURE_NO_EXTRAS -o $@
+
+$(BUILD_DIR)/%.o: $(UNITY_FRAMEWORK_SRC)/%.c
 	$(CC) -c $< -o $@
+
+$(BUILD_DIR)/%.o: $(UNITY_FIXTURE_SRC)/%.c
+	$(CC) -c $< -I$(UNITY_FRAMEWORK_SRC) -I$(UNITY_FIXTURE_SRC) -DUNITY_FIXTURE_NO_EXTRAS -o $@
+
+#-mcrt=clib2 -m68020-60 -msoft-float
 
 clean:
 	@rm -rf build-dev build-os3 build-os4

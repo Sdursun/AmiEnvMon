@@ -1,3 +1,6 @@
 [submodule "unity"]
 	path = unity
 	url = https://github.com/ThrowTheSwitch/Unity.git
+[submodule "jsonlib"]
+	path = jsonlib
+	url = https://github.com/zserge/jsmn.git
