@@ -67,4 +67,4 @@ $(BUILD_DIR)/%.o: $(UNITY_FIXTURE_SRC)/%.c
 clean:
 	@rm -rf build-dev build-os3 build-os4
 	@rm -f tests-os3 tests-os4 tests-dev
-	@rm AmiEnvMon
+	@rm -f AmiEnvMon
