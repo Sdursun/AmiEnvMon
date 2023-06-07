@@ -8,7 +8,7 @@
 struct EnvironmentMonitorData {
   float temperature;
   float humidity;
-  float eCO2;
+  int eCO2;
 };
 
 struct EnvironmentMonitorData* EnvMon_FromJsonString(const char* json_string);
