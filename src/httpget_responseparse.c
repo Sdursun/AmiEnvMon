@@ -3,16 +3,11 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "string_utils.h"
+
 // clrf is default line sep in http responses:
 // https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html
 #define HEADER_SEPERATOR "\r\n"
-
-// TODO: duplicate of json string test in envmondata.c.
-// maybe have a common string utils?
-#define MAX_JSON_STRING_LENGTH 512
-static bool isStringEmpty(const char* json_string) {
-  return NULL == json_string || 0 == strncmp(json_string, "", MAX_JSON_STRING_LENGTH);
-}
 
 // stupid assumption to make life simpler: we can only get json body on HTTP status 200
 // (the env monitor actually is super simple, which helps)

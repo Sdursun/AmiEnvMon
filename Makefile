@@ -29,9 +29,10 @@ UNITY_FIXTURE_SRC   := unity/extras/fixture/src
 UNITY_OBJECTS := unity.o unity_fixture.o
 UNITY_OBJECTS := $(foreach obj,$(UNITY_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj))) 
 
-TEST_OBJECTS := envmondata.o envmondata_test.o testmain.o
+TEST_OBJECTS := string_utils.o string_utils_isstringempty_test.o envmondata.o envmondata_test.o httpget_responseparse.o httpget_responseparse_test.o testmain.o
 TEST_OBJECTS := $(foreach obj,$(TEST_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj))) 
-MAIN_OBJECTS := 
+MAIN_OBJECTS := string_utils.o envmondata.o httpget_responseparse.o main.o
+MAIN_OBJECTS := $(foreach obj,$(MAIN_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj))) 
 
 
 AmiEnvMon: _main_platform_check $(BUILD_DIR) $(BUILD_DIR)/httpget.o $(BUILD_DIR)/main.o

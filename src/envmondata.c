@@ -4,17 +4,14 @@
 #include <string.h>
 #include "jsmn.h"
 #include "envmondata.h"
+#include "string_utils.h"
 
 #define MAX_JSON_TOKENS 30
 #define MAX_JSON_STRING_LENGTH 512
 
-static bool isJsonStringEmpty(const char* json_string) {
-  return NULL == json_string || 0 == strncmp(json_string, "", MAX_JSON_STRING_LENGTH);
-}
-
 // TODO: prettify
 struct EnvironmentMonitorData *EnvMon_FromJsonString(const char* json_string) {
-  if(isJsonStringEmpty(json_string)) {
+  if(isStringEmpty(json_string)) {
     return NULL;
   }
   
