@@ -32,5 +32,6 @@ char *getJsonBodyFromHttpResponse(const char *http_response) {
   }
   
   json_body = strdup(prev);
+  free(response);
   return json_body;
 }
