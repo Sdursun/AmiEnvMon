@@ -20,14 +20,15 @@ char *getJsonBodyFromHttpResponse(const char *http_response) {
   if(isStringEmpty(http_response) || !isHttpStatus200(http_response)) {
     return NULL;
   }
-  
+
   char* response = strdup(http_response);
+  char* iterator = response;
   char* current;
   char* prev;
   char* json_body;
-  for(current = strsep(&response, HEADER_SEPERATOR);
+  for(current = strsep(&iterator, HEADER_SEPERATOR);
       current != NULL;
-      current = strsep(&response, HEADER_SEPERATOR)) {
+      current = strsep(&iterator, HEADER_SEPERATOR)) {
     prev = current;
   }
   
