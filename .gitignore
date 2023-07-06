@@ -1,2 +1,4 @@
+AmiEnvMon
 build-os*
 tests-*
+.cache/
