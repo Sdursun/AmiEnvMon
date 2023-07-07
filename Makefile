@@ -66,8 +66,6 @@ $(BUILD_DIR)/%.o: $(UNITY_FRAMEWORK_SRC)/%.c
 $(BUILD_DIR)/%.o: $(UNITY_FIXTURE_SRC)/%.c
 	$(CC) -c $< -I$(UNITY_FRAMEWORK_SRC) -I$(UNITY_FIXTURE_SRC) -DUNITY_FIXTURE_NO_EXTRAS -o $@
 
-#-mcrt=clib2 -m68020-60 -msoft-float
-
 clean:
 	@rm -rf build-dev build-os3 build-os4
 	@rm -f tests-os3 tests-os4 tests-dev
