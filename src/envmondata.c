@@ -31,6 +31,11 @@ struct EnvironmentMonitorData *EnvMon_FromJsonString(const char* json_string) {
   size_t num_read = 0;
   for(i = 0; i < num_parsed_tokens; i++) {
     size_t string_length = json_tokens[i].end - json_tokens[i].start;
+
+    // weird bug that somtimes happen only on Amiga
+    if(-1 == string_length) {
+      continue;
+    }
     
     if(0 == strncmp(json_string + json_tokens[i].start, "temperature", string_length)) {
       num_read++;
