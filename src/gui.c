@@ -1,10 +1,15 @@
+#include "envmondata.h"
 #include "proto/muimaster.h"
 #include "libraries/mui.h"
 #include "proto/exec.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 // need to open these ourselves when using MUI with clib2
 struct Library* MUIMasterBase;
 struct IntuitionBase* IntuitionBase;
+
+struct EnvironmentMonitorData* envmondata;
 
 static void initLibraries() {
   // TODO: why isn't mui version 20 working at my end?
@@ -17,12 +22,35 @@ static void closeLibraries() {
   CloseLibrary(MUIMasterBase);
 }
 
-void draw() {
+void GUI_SetEnvMonData(struct EnvironmentMonitorData *data) {
+  envmondata = data;
+}
+
+#define MAX_STRING_LENGTH 8
+
+// TODO: prettify. Always a bit sceptical of global variable shit
+// also, free it yourself biatch
+static char *createTemperatureString() {
+  char* result = calloc(MAX_STRING_LENGTH, sizeof(char));
+  snprintf(result, MAX_STRING_LENGTH, "%f C", envmondata->temperature);
+  return result;
+}
+
+static char *createECO2String() {
+  char* result = calloc(MAX_STRING_LENGTH, sizeof(char));
+  snprintf(result, MAX_STRING_LENGTH, "%d ppm", envmondata->eCO2);
+  return result;
+}
+
+void GUI_Draw() {
   initLibraries();
 
   APTR application;
   APTR window;
 
+  char* temperature_string = createTemperatureString();
+  char* eco2_string = createECO2String();
+  
   // TODO: would a pixel art termometer or other meassuring device at the top be a fun touch? :P
   application = ApplicationObject,
     MUIA_Application_Title, "AmiEnvMon",
@@ -47,7 +75,7 @@ void draw() {
             MUIA_Text_Contents, "Temperature:",
           End,
           Child, TextObject,
-            MUIA_Text_Contents, "24 C",
+            MUIA_Text_Contents, temperature_string,
           End,
         End,
         Child, HGroup,
@@ -55,7 +83,7 @@ void draw() {
             MUIA_Text_Contents, "Humidity:",
           End,
           Child, GaugeObject,
-            MUIA_Gauge_Current, 25,
+            MUIA_Gauge_Current, (long)envmondata->humidity,
             MUIA_Gauge_InfoText, "%ld %%",
             MUIA_Gauge_Horiz, TRUE,
           End,
@@ -65,13 +93,17 @@ void draw() {
             MUIA_Text_Contents, "eCO2:",
           End,
           Child, TextObject,
-            MUIA_Text_Contents, "420 ppm",
+            MUIA_Text_Contents, eco2_string,
           End,
         End,
       End,
     End,
   End;
 
+  // MUI copies the text strings, so free our own copies
+  free(temperature_string);
+  free(eco2_string);
+  
   set(window, MUIA_Window_Open, TRUE);
   DoMethod(application, MUIM_Application_Run);
 
@@ -91,7 +123,6 @@ void draw() {
     }
   }
   
-
   set(window, MUIA_Window_Open, FALSE);
     
   MUI_DisposeObject(application);
