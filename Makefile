@@ -12,8 +12,11 @@ SRC_DIR := src
 TESTS_DIR := tests
 BUILD_DIR := build-$(OS)
 
+# TODO: split up the cflags and ldflags better. lazy here
 ifeq ($(OS), os3)
 	CC = m68k-amigaos-gcc
+	CFLAGS = -mcrt=clib2 -m68020-60 -msoft-float
+    LDFLAGS = -lmui -lm -lc -lg -lnet -mcrt=clib2
 endif
 
 ifeq ($(OS), os4)
@@ -36,7 +39,7 @@ MAIN_OBJECTS := $(foreach obj,$(MAIN_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj)))
 
 
 AmiEnvMon: _main_platform_check $(BUILD_DIR) $(MAIN_OBJECTS)
-	$(CC) $(MAIN_OBJECTS) -o AmiEnvMon -lmui -lm -lc -lg -lnet -mcrt=clib2 -m68020-60 -msoft-float
+	$(CC) $(MAIN_OBJECTS) -o AmiEnvMon $(CFLAGS) $(LDFLAGS)
 
 _main_platform_check:
 	@if [ "dev" = $(OS) ]; then\
@@ -45,7 +48,7 @@ _main_platform_check:
 	fi
 
 tests: $(BUILD_DIR) $(UNITY_OBJECTS) $(TEST_OBJECTS)
-	$(CC) $(UNITY_OBJECTS) $(TEST_OBJECTS) -o tests-$(OS)
+	$(CC) $(UNITY_OBJECTS) $(TEST_OBJECTS) -o tests-$(OS) $(CFLAGS) $(LDFLAGS)
 
 build-$(OS):
 	@mkdir -p $(BUILD_DIR)
