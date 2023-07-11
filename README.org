@@ -1,4 +1,5 @@
 [[./amienvmon.png]]
+[[https://github.com/themkat/AmiEnvMon/actions/workflows/build.yaml][file:https://github.com/themkat/AmiEnvMon/actions/workflows/build.yaml/badge.svg]]
 * AmiEnvMon - Simple environment monitor for Amiga
 
 
