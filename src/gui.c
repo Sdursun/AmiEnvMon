@@ -70,6 +70,14 @@ void GUI_Draw() {
       MUIA_Window_SizeGadget, TRUE,
     
       WindowContents, VGroup,
+        Child, ImageObject,
+          MUIA_Image_Spec, (long)"5:amienvmon.png",
+          MUIA_FixWidth, 250,
+          MUIA_FixHeight, 100,
+          // TODO: these have to be set for some reason, or else nothing shows
+          MUIA_Image_FreeVert, TRUE,
+          MUIA_Image_FreeHoriz, TRUE,
+        End,
         Child, HGroup,
           Child, TextObject,
             MUIA_Text_Contents, "Temperature:",
