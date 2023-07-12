@@ -1,7 +1,6 @@
 [[./amienvmon.png]]
 
 [[https://github.com/themkat/AmiEnvMon/actions/workflows/build.yaml][file:https://github.com/themkat/AmiEnvMon/actions/workflows/build.yaml/badge.svg]]
-* AmiEnvMon - Simple environment monitor for Amiga
 
 
 Calls [[https://github.com/themkat/pico-environment-monitor][my homemade Pico environment monitor API]] to fetch information, and shows them in a nice MUI GUI :)
