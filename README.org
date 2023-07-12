@@ -6,3 +6,6 @@
 Calls [[https://github.com/themkat/pico-environment-monitor][my homemade Pico environment monitor API]] to fetch information, and shows them in a nice MUI GUI :)
 
 
+This is what is looks like in OS 3.2:
+
+[[./screenshot_os3.png]]
