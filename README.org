@@ -9,3 +9,11 @@ Calls [[https://github.com/themkat/pico-environment-monitor][my homemade Pico en
 This is what is looks like in OS 3.2:
 
 [[./screenshot_os3.png]]
+
+
+** Goals
+I had a few goals with this project:
+- Have a way for my Amiga to view temperature and other environment data in a nice way.
+- Experiment with MUI for creating nice Amiga GUIs.
+- Take testing (mostly unit testing) as far as possible on a real Amiga.
+- Use modern CI/CD to test and release using Github Actions.
