@@ -9,8 +9,6 @@ int main() {
   char* http_response = httpget();
   char* json_body = getJsonBodyFromHttpResponse(http_response);  
   struct EnvironmentMonitorData* envmondata = EnvMon_FromJsonString(json_body);
-
-  printf("json string: %s\n", json_body);
   
   free(http_response);
   free(json_body);
