@@ -31,8 +31,8 @@ My coding standard here and other places are based upon many factors:
 
 It may be a bit unconventional at times, but I like it this way. My rules are as following:
 - Private, local- or standalone functions are camelCase.
-- Variables and parameters are snake case like Rust. (example: `my_variable`)
-- Some interfaces fall naturally into being components. Example: a ChatMessage component system that work on Chat data. These functions will be a special case, example: `ChatMessage_InsertMessage`. This is in a way to "emulate" logical components.
+- Variables and parameters are snake case like Rust. (example: =my_variable=)
+- Some interfaces fall naturally into being components. Example: a ChatMessage component system that work on Chat data. These functions will be a special case, example: =ChatMessage_InsertMessage=. This is in a way to "emulate" logical components.
 
 
 Love it or hate it, I think it makes programs more easy to reason about and read :)
