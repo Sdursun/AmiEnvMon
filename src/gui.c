@@ -31,13 +31,16 @@ void GUI_SetEnvMonData(struct EnvironmentMonitorData *data) {
 // TODO: prettify. Always a bit sceptical of global variable shit
 // also, free it yourself biatch
 static char *createTemperatureString() {
-  char* result = calloc(MAX_STRING_LENGTH, sizeof(char));
-  snprintf(result, MAX_STRING_LENGTH, "%f C", envmondata->temperature);
+  // keycode found from:
+  // https://wiki.amigaos.net/wiki/Keymap_Library
+  static const char degree_symbol = 176;
+  char* result = calloc(MAX_STRING_LENGTH + 1, sizeof(char));
+  snprintf(result, MAX_STRING_LENGTH, "%.1f %cC", envmondata->temperature, degree_symbol);
   return result;
 }
 
 static char *createECO2String() {
-  char* result = calloc(MAX_STRING_LENGTH, sizeof(char));
+  char* result = calloc(MAX_STRING_LENGTH + 1, sizeof(char));
   snprintf(result, MAX_STRING_LENGTH, "%d ppm", envmondata->eCO2);
   return result;
 }
