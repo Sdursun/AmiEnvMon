@@ -17,3 +17,22 @@ I had a few goals with this project:
 - Experiment with MUI for creating nice Amiga GUIs.
 - Take testing (mostly unit testing) as far as possible on a real Amiga.
 - Use modern CI/CD to test and release using Github Actions.
+
+
+** About the coding style
+*NB: The filenames and minor naming will probably change.*
+
+
+My coding standard here and other places are based upon many factors:
+- My experience in spare time programs, work (professional work has mostly been higher level work than C) etc. over many years.
+- Me disliking a lot of other coding styles I have read in the C world.
+- Reading various books on C and seeing different coding styles
+
+
+It may be a bit unconventional at times, but I like it this way. My rules are as following:
+- Private, local- or standalone functions are camelCase.
+- Variables and parameters are snake case like Rust. (example: `my_variable`)
+- Some interfaces fall naturally into being components. Example: a ChatMessage component system that work on Chat data. These functions will be a special case, example: `ChatMessage_InsertMessage`. This is in a way to "emulate" logical components.
+
+
+Love it or hate it, I think it makes programs more easy to reason about and read :)
