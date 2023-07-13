@@ -51,17 +51,17 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - name: Build main application
-        run: |
-          make AmiEnvMon -e OS=os4
+      # - name: Build main application
+      #   run: |
+      #     make AmiEnvMon -e OS=os4
       - name: Build tests
         run: |
           make tests -e OS=os4
-      - uses: actions/upload-artifact@v3
-        with:
-          name: AmiEnvMon-OS4
-          path: |
-            AmiEnvMon
-            amienvmon.png
-            tests-os4
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: AmiEnvMon-OS4
+      #     path: |
+      #       AmiEnvMon
+      #       amienvmon.png
+      #       tests-os4
 
