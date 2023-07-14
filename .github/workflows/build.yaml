@@ -34,6 +34,7 @@ jobs:
     container: themkat/amigaosm68k:latest
     steps:
       - name: Install lhasa dependency
+        if: ${{ github.ref_type == 'tag' }}
         run: |
           sudo apt-get install -y lhasa
       - uses: actions/checkout@v3
