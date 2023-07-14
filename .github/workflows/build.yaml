@@ -23,6 +23,9 @@ jobs:
       - name: Run tests and check for memory leaks
         run: |
           valgrind --leak-check=full -s --error-exitcode=1 ./tests-dev -r 3
+      - name: Create test coverage report
+        run: |
+          ./.github/scripts/create-test-coverage-report.sh >> $GITHUB_STEP_SUMMARY
 
 
   # todo: Publish the resulting program to github releases when more polished and working

@@ -2,3 +2,4 @@ AmiEnvMon
 build-os*
 tests-*
 .cache/
+*.gcov
