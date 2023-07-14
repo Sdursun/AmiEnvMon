@@ -1,6 +1,10 @@
 name: Build and run tests
 
-on: [push]
+on:
+  push:
+    branches:
+    tags:
+      - 'v*'
 
 jobs:
   dev-system-tests:
@@ -34,9 +38,8 @@ jobs:
       - name: Build tests
         run: |
           make tests -e OS=os3
-
       - uses: actions/upload-artifact@v3
-        # TODO: better artifact name?
+        if: ${{ env.GITHUB_REF_TYPE == 'tag' }}
         with:
           name: AmiEnvMon-OS3
           path: |
