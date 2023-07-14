@@ -43,12 +43,13 @@ jobs:
         run: |
           make tests -e OS=os3
       - name: Create lha archive
+        if: ${{ github.ref_type == 'tag' }}
         run: |
           lha a AmiEnvMon-OS3.lha AmiEnvMon
           lha a AmiEnvMon-OS3.lha amienvmon.png
           lha a AmiEnvMon-OS3.lha tests-os3
       - uses: actions/upload-artifact@v3
-        #if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.ref_type == 'tag' }}
         with:
           name: AmiEnvMon-OS3
           path: AmiEnvMon-OS3.lha
