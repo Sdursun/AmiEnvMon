@@ -21,7 +21,7 @@ endif
 
 ifeq ($(OS), os4)
 	CC = ppc-amigaos-gcc
-	CFLAGS = -mcrt=clib2
+	CFLAGS =
 endif
 
 
