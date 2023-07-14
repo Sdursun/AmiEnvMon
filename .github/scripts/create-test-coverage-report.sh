@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# run, as it does't seem that valgrind counts
-./tests-dev
-
 echo '# Test coverage report'
 echo -e '| File | Coverage (%) |\n|---|---|'
 
