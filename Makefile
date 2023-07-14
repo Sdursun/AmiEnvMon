@@ -5,7 +5,7 @@ OS := dev
 # compilation based upon the OS-target
 # includes flags
 CC := gcc
-CFLAGS :=
+CFLAGS := -fprofile-arcs -ftest-coverage
 LDFLAGS :=
 
 SRC_DIR := src
@@ -55,16 +55,16 @@ build-$(OS):
 
 # TODO: any way to combine the compilations?
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) -c $< -o $@ -I$(JSON_LIB_SRC)
+	$(CC) -c $< -o $@ $(CFLAGS) -I$(JSON_LIB_SRC) -I/opt/amiga3/m68k-amigaos/ndk-include -I/opt/amiga3/include
 
 $(BUILD_DIR)/%.o: $(TESTS_DIR)/%.c
-	$(CC) -c $< -I$(SRC_DIR) -I$(UNITY_FRAMEWORK_SRC) -I$(UNITY_FIXTURE_SRC) -DUNITY_FIXTURE_NO_EXTRAS -o $@
+	$(CC) -c $< $(CFLAGS) -I$(SRC_DIR) -I$(UNITY_FRAMEWORK_SRC) -I$(UNITY_FIXTURE_SRC) -DUNITY_FIXTURE_NO_EXTRAS -o $@
 
 $(BUILD_DIR)/%.o: $(UNITY_FRAMEWORK_SRC)/%.c
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 $(BUILD_DIR)/%.o: $(UNITY_FIXTURE_SRC)/%.c
-	$(CC) -c $< -I$(UNITY_FRAMEWORK_SRC) -I$(UNITY_FIXTURE_SRC) -DUNITY_FIXTURE_NO_EXTRAS -o $@
+	$(CC) -c $< $(CFLAGS) -I$(UNITY_FRAMEWORK_SRC) -I$(UNITY_FIXTURE_SRC) -DUNITY_FIXTURE_NO_EXTRAS -o $@
 
 clean:
 	@rm -rf build-dev build-os3 build-os4
