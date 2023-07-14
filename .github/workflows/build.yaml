@@ -69,3 +69,16 @@ jobs:
       #       amienvmon.png
       #       tests-os4
 
+  release:
+    runs-on: ubuntu-latest
+    needs: [dev-system-tests, amiga-m68k-build, amiga-ppc-build]
+    if: ${{ env.GITHUB_REF_TYPE == 'tag' }}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: AmiEnvMon-OS3
+      - uses: ncipollo/release-action@v1
+        with:
+          name: AmiEnvMon ${{ github.ref }}
+          artifacts: "AmiEnvMon-OS3.zip"
+          tag: ${{ github.ref }}
