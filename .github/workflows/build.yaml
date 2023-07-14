@@ -30,6 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     container: themkat/amigaosm68k:latest
     steps:
+      - name: Install lhasa dependency
+        run: |
+          sudo apt-get install -y lhasa
       - uses: actions/checkout@v3
         with:
           submodules: true
@@ -39,15 +42,16 @@ jobs:
       - name: Build tests
         run: |
           make tests -e OS=os3
-      # TODO: maybe we should release lha files?
+      - name: Create lha archive
+        run: |
+          lha a AmiEnvMon-OS3.lha AmiEnvMon
+          lha a AmiEnvMon-OS3.lha amienvmon.png
+          lha a AmiEnvMon-OS3.lha tests-os3
       - uses: actions/upload-artifact@v3
-        if: ${{ github.ref_type == 'tag' }}
+        #if: ${{ github.ref_type == 'tag' }}
         with:
           name: AmiEnvMon-OS3
-          path: |
-            AmiEnvMon
-            amienvmon.png
-            tests-os3
+          path: AmiEnvMon-OS3.lha
 
   amiga-ppc-build:
     runs-on: ubuntu-latest
@@ -80,9 +84,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: AmiEnvMon-OS3
-      # TODO: maybe we should release lha files?
       - uses: ncipollo/release-action@v1
         with:
           name: AmiEnvMon ${{ github.ref_name }}
-          artifacts: "AmiEnvMon-OS3.zip"
+          body: ""
+          artifacts: "AmiEnvMon-OS3.lha"
           tag: ${{ github.ref }}
