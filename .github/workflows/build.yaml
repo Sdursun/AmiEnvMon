@@ -62,6 +62,10 @@ jobs:
     runs-on: ubuntu-latest
     container: themkat/amigaosppc:latest
     steps:
+      - name: Install lhasa dependency
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          sudo apt-get install -y lhasa
       - uses: actions/checkout@v3
         with:
           submodules: true
@@ -71,13 +75,17 @@ jobs:
       - name: Build tests
         run: |
           make tests -e OS=os4
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: AmiEnvMon-OS4
-      #     path: |
-      #       AmiEnvMon
-      #       amienvmon.png
-      #       tests-os4
+      - name: Create lha archive
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          lha a AmiEnvMon-OS4.lha AmiEnvMon
+          lha a AmiEnvMon-OS4.lha amienvmon.png
+          lha a AmiEnvMon-OS4.lha tests-os4
+      - uses: actions/upload-artifact@v3
+        if: ${{ github.ref_type == 'tag' }}
+        with:
+          name: AmiEnvMon-OS4
+          path: AmiEnvMon-OS4.lha
 
   release:
     runs-on: ubuntu-latest
@@ -89,9 +97,12 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: AmiEnvMon-OS3
+      - uses: actions/download-artifact@v3
+        with:
+          name: AmiEnvMon-OS4
       - uses: ncipollo/release-action@v1
         with:
           name: AmiEnvMon ${{ github.ref_name }}
           body: ""
-          artifacts: "AmiEnvMon-OS3.lha"
+          artifacts: "AmiEnvMon-OS*.lha"
           tag: ${{ github.ref }}
