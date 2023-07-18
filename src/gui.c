@@ -5,21 +5,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef __amigaos4__
+#include "inline4/muimaster.h"
+#endif
+
 // need to open these ourselves when using MUI with clib2
+#ifdef __amigaos4__
+struct MUIMasterIFace *IMUIMaster;
+struct Library* MUIMasterBase;
+#else
+struct MUIMasterIFace *IMUIMaster;
 struct Library* MUIMasterBase;
 struct IntuitionBase* IntuitionBase;
+#endif
 
 struct EnvironmentMonitorData* envmondata;
 
 static void initLibraries() {
   // TODO: why isn't mui version 20 working at my end?
+#ifdef __amigaos4__
+  MUIMasterBase = IExec->OpenLibrary("muimaster.library", MUIMASTER_VMIN);
+  IMUIMaster = IExec->GetInterface(MUIMasterBase, "main", 1, NULL);
+#else
   MUIMasterBase = OpenLibrary("muimaster.library", MUIMASTER_VMIN);
   IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 37);
+#endif
 }
 
 static void closeLibraries() {
-  CloseLibrary(IntuitionBase);
+#ifdef __amigaos4__
+  IExec->DropInterface(IMUIMaster);
+  IExec->CloseLibrary(MUIMasterBase);
+#else
   CloseLibrary(MUIMasterBase);
+  CloseLibrary(IntuitionBase);  
+#endif
 }
 
 void GUI_SetEnvMonData(struct EnvironmentMonitorData *data) {
@@ -114,28 +134,50 @@ void GUI_Draw() {
   // MUI copies the text strings, so free our own copies
   free(temperature_string);
   free(eco2_string);
-  
-  set(window, MUIA_Window_Open, TRUE);
-  DoMethod(application, MUIM_Application_Run);
 
+  #ifdef __amigaos4__
+  IIntuition->set(window, MUIA_Window_Open, TRUE);
+  #else
+  set(window, MUIA_Window_Open, TRUE);
+  #endif
+  
+  #ifdef __amigaos4__
+  IIntuition->IDoMethod(application, MUIM_Application_Run);
+  IIntuition->IDoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+  #else
+  DoMethod(application, MUIM_Application_Run);
   DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+  #endif
 
   BOOL window_open = TRUE;
   ULONG signals;
-  while(window_open) {    
+  while(window_open) {
+#ifdef __amigaos4__
+    ULONG id = IIntuition->IDoMethod(application, MUIM_Application_Input, &signals);
+#else
     ULONG id = DoMethod(application, MUIM_Application_Input, &signals);
+#endif
     
     if(MUIV_Application_ReturnID_Quit == id) {
       window_open = FALSE;
     }
     
     if(signals && window_open) {
+#ifdef __amigaos4__
+      IExec->Wait(signals);
+#else
       Wait(signals);
+#endif
     }
   }
-  
+
+
+  #ifdef __amigaos4__
+  IIntuition->set(window, MUIA_Window_Open, FALSE);
+  #else
   set(window, MUIA_Window_Open, FALSE);
-    
+  #endif
+  
   MUI_DisposeObject(application);
   closeLibraries();
 }

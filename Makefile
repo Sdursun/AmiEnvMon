@@ -21,7 +21,8 @@ endif
 
 ifeq ($(OS), os4)
 	CC = ppc-amigaos-gcc
-	CFLAGS =
+	CFLAGS =  -mcrt=newlib -mcpu=powerpc
+	LDFLAGS = -lauto -mcpu=powerpc
 endif
 
 
