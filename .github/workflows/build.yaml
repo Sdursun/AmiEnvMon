@@ -60,14 +60,14 @@ jobs:
 
   amiga-ppc-build:
     runs-on: ubuntu-latest
-    container: amigadev/crosstools:ppc-amigaos
+    container: themkat/amigaosppc:latest
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      # - name: Build main application
-      #   run: |
-      #     make AmiEnvMon -e OS=os4
+      - name: Build main application
+        run: |
+          make AmiEnvMon -e OS=os4
       - name: Build tests
         run: |
           make tests -e OS=os4
