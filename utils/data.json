@@ -1,0 +1,11 @@
+[
+    {
+        "httpRequest": {
+            "path": "/environment.json"
+        },
+        "httpResponseTemplate": {
+            "templateType": "VELOCITY",
+            "template": "{'headers': {\"Content-Type\": \"application/json\"}, 'body': '{\"temperature\": $math.random(18.0,26.0), \"humidity\": $math.random(35.0,50.0), \"eCO2\": $math.random(390,420) }'}"
+        }
+    }
+]

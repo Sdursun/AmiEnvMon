@@ -1,0 +1,4 @@
+* AmiEnvMon - Utilities
+
+docker-compose file and settings with a mockserver to replace the pico-environment-monitor when not available (or to avoid having to have it running to develop). Generates semi plausible random data. 
+
