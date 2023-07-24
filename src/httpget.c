@@ -23,7 +23,7 @@ char* httpget() {
   // TODO: error check the operations. Should be able to timeout
   char* response = calloc(1024, sizeof(char));
   // write to write data to socket
-  write(socket_fd, "GET /environment.json HTTP/1.1", 30);
+  write(socket_fd, "GET /environment.json HTTP/1.1\r\n\r\n", 35);
   
   // read data from socket
   read(socket_fd, response, 1024);
