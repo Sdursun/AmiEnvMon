@@ -66,10 +66,13 @@ static char *createECO2String() {
   return result;
 }
 
+#define MENUSTRIP_SETTINGS 1
+#define MENUSTRIP_QUIT 2
+
 static struct NewMenu menustrip[] = {
   { NM_TITLE, "File", 0, 0, 0, 0 },
-  { NM_ITEM, "Settings", 0, 0, 0, 0 },
-  { NM_ITEM, "Quit", "Q", 0, 0, 0 },
+  { NM_ITEM, "Settings", 0, 0, 0, MENUSTRIP_SETTINGS },
+  { NM_ITEM, "Quit", "Q", 0, 0, MENUSTRIP_QUIT },
   { NM_END, NULL, 0, 0, 0, 0 }
 };
 
@@ -166,7 +169,7 @@ void GUI_Draw() {
     ULONG id = DoMethod(application, MUIM_Application_Input, &signals);
 #endif
     
-    if(MUIV_Application_ReturnID_Quit == id) {
+    if(MUIV_Application_ReturnID_Quit == id || id == MENUSTRIP_QUIT) {
       window_open = FALSE;
     }
     
