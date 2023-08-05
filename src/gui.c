@@ -1,6 +1,7 @@
 #include "envmondata.h"
 #include "proto/muimaster.h"
 #include "libraries/mui.h"
+#include "libraries/gadtools.h"
 #include "proto/exec.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,6 +66,13 @@ static char *createECO2String() {
   return result;
 }
 
+static struct NewMenu menustrip[] = {
+  { NM_TITLE, "File", 0, 0, 0, 0 },
+  { NM_ITEM, "Settings", 0, 0, 0, 0 },
+  { NM_ITEM, "Quit", "Q", 0, 0, 0 },
+  { NM_END, NULL, 0, 0, 0, 0 }
+};
+
 void GUI_Draw() {
   initLibraries();
 
@@ -74,12 +82,12 @@ void GUI_Draw() {
   char* temperature_string = createTemperatureString();
   char* eco2_string = createECO2String();
   
-  // TODO: would a pixel art termometer or other meassuring device at the top be a fun touch? :P
   application = ApplicationObject,
     MUIA_Application_Title, "AmiEnvMon",
     MUIA_Application_Version, "$VER: 0.0.1",
     MUIA_Application_Description, "Simple environment monitor for Amiga",
     MUIA_Application_Base, "PROGRAM",
+    MUIA_Application_Menustrip, MUI_MakeObject(MUIO_MenustripNM, menustrip, 0),
     
     SubWindow, window = WindowObject,
       MUIA_Window_Title, "AmiEnvMon",
