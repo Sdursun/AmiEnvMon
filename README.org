@@ -24,7 +24,9 @@ I had a few goals with this project:
 *** OS 3.x (m68k)
 - TCP/IP stack like [[http://roadshow.apc-tcp.de/index-en.php][Roadshow]] to provide BSDSocket.library
 - MUI, at least 3.8
+- PNG datatype. (included in OS 3.2). Might change to an ILBM or similar image to improve compatibility later.
 *** OS 4 (ppc)
+- Internet connection set up... duh... (at least access to your local network)
 - MUI version 5
 
 ** About the coding style
