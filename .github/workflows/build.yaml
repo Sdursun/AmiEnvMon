@@ -50,6 +50,7 @@ jobs:
         if: ${{ github.ref_type == 'tag' }}
         run: |
           lha a AmiEnvMon-OS3.lha AmiEnvMon
+          lha a AmiEnvMon-OS3.lha Settings
           lha a AmiEnvMon-OS3.lha amienvmon.png
           lha a AmiEnvMon-OS3.lha tests-os3
       - uses: actions/upload-artifact@v3
@@ -79,6 +80,7 @@ jobs:
         if: ${{ github.ref_type == 'tag' }}
         run: |
           lha a AmiEnvMon-OS4.lha AmiEnvMon
+          lha a AmiEnvMon-OS4.lha Settings
           lha a AmiEnvMon-OS4.lha amienvmon.png
           lha a AmiEnvMon-OS4.lha tests-os4
       - uses: actions/upload-artifact@v3
