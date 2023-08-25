@@ -37,11 +37,14 @@ UNITY_OBJECTS := $(foreach obj,$(UNITY_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj)
 TEST_OBJECTS := string_utils.o string_utils_isstringempty_test.o envmondata.o envmondata_test.o httpget_responseparse.o httpget_responseparse_test.o testmain.o
 TEST_OBJECTS := $(foreach obj,$(TEST_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj))) 
 MAIN_OBJECTS := string_utils.o envmondata.o httpget_responseparse.o gui.o httpget.o main.o
-MAIN_OBJECTS := $(foreach obj,$(MAIN_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj))) 
+MAIN_OBJECTS := $(foreach obj,$(MAIN_OBJECTS),$(addprefix $(BUILD_DIR)/,$(obj)))
 
 
-AmiEnvMon: _main_platform_check $(BUILD_DIR) $(MAIN_OBJECTS)
+AmiEnvMon: _main_platform_check $(BUILD_DIR) $(BUILD_DIR)/main.o $(MAIN_OBJECTS)
 	$(CC) $(MAIN_OBJECTS) -o AmiEnvMon $(CFLAGS) $(LDFLAGS)
+
+Settings: _main_platform_check $(BUILD_DIR) $(BUILD_DIR)/settings_gui.o
+	$(CC) $(BUILD_DIR)/settings_gui.o -o Settings $(CFLAGS) $(LDFLAGS)	
 
 _main_platform_check:
 	@if [ "dev" = $(OS) ]; then\
