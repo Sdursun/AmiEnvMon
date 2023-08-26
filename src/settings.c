@@ -1,6 +1,7 @@
 #include "settings.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 struct ApplicationSettings *Settings_ReadFromFile(const char *filename) {
@@ -29,6 +30,12 @@ struct ApplicationSettings *Settings_ReadFromFile(const char *filename) {
   return settings;
 }
 
+struct ApplicationSettings *Settings_Default() {
+  struct ApplicationSettings* settings = calloc(1, sizeof(struct ApplicationSettings));
+  settings->ip = strndup("10.0.0.6", 16);
+  // TODO: the rest of the defaults
+  return settings;
+}
 
 void Settings_WriteSettingsToFile(struct ApplicationSettings *settings,
                                   const char *filename) {}

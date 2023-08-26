@@ -16,6 +16,9 @@ struct ApplicationSettings {
 // If the file could not be read, is not correctly formatted etc., NULL is returned.
 struct ApplicationSettings *Settings_ReadFromFile(const char* filename);
 
+// Gives some sensible defaults to the settings
+struct ApplicationSettings *Settings_Default();
+
 // TODO: should we return a status or similar here? or just assume that writing
 // will not fail
 void Settings_WriteSettingsToFile(struct ApplicationSettings* settings, const char* filename);

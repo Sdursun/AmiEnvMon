@@ -1,4 +1,3 @@
-#include "envmondata.h"
 #include "exec/types.h"
 #include "proto/muimaster.h"
 #include "libraries/mui.h"
@@ -6,6 +5,9 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "envmondata.h"
+#include "settings.h"
 
 #ifdef __amigaos4__
 #include "inline4/muimaster.h"
@@ -49,6 +51,10 @@ static void closeLibraries() {
 #endif
 }
 
+
+struct ApplicationSettings* application_settings;
+
+
 static void draw() {
   APTR application;
   APTR window;
@@ -82,8 +88,9 @@ static void draw() {
           End,
         End,
         // TODO: something like a CycleObject to select the alignment setting?
+        // TODO: Mui knob to select if the application should continously refresh or not
         Child, HGroup,
-          Child, SimpleButton("Save"),
+          Child, SimpleButton("Save and exit"),
           Child, SimpleButton("Cancel"),
         End,
       End,
@@ -137,14 +144,21 @@ static void draw() {
 }
 
 int main(int argc, char *argv[]) {
-  // TODO: read current settings if available
+  // read current settings if available
+  application_settings = Settings_ReadFromFile("amienvmon_settings");
+
+  // default to some nice defaults if no current settings are created
+  if (NULL == application_settings) {
+    application_settings = Settings_Default();
+  }
   
+  // rendering and amiga specific logic
   initLibraries();
   draw();
   closeLibraries();
 
-  // TODO: clean up settings data memory
-  
+  // clean up settings data memory
+  Settings_Destroy(application_settings);
   
   return 0;
 }
