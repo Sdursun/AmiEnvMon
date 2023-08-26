@@ -1,5 +1,8 @@
 AmiEnvMon
+Settings
 build-os*
 tests-*
+compile_commands.json
+.clangd
 .cache/
 *.gcov
