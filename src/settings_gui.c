@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "envmondata.h"
 #include "settings.h"
@@ -54,10 +55,31 @@ static void closeLibraries() {
 
 struct ApplicationSettings* application_settings;
 
+#define SAVE_BUTTON_PRESS 1
+#define CANCEL_BUTTON_PRESS 2
+
+static APTR ip_input_box;
+
+static void handleSave() {
+  // TODO: handle input fields, maybe IP validation(?), and writing to file
+  char* ip_input;
+  size_t get_result = get(ip_input_box, MUIA_String_Contents, &ip_input);
+
+  
+  // TODO: should we free the current one? maybe have a Settings_ function to handle something like this to avoid low level string operations everywhere
+  //free(application_settings->ip);
+  application_settings->ip = strndup(ip_input, 16);
+
+  Settings_WriteSettingsToFile(application_settings, "amienvmon_settings");
+
+  // TODO: should we exit once done?
+}
 
 static void draw() {
   APTR application;
   APTR window;
+  APTR cancel_button;
+  APTR save_button;
    
   application = ApplicationObject,
     MUIA_Application_Title, "AmiEnvMon - Settings",
@@ -81,8 +103,8 @@ static void draw() {
           Child, TextObject,
             MUIA_Text_Contents, "IP/URL:",
           End,
-          Child, StringObject,
-            MUIA_String_Contents, "10.0.0.7",
+          Child, ip_input_box = StringObject,
+            MUIA_String_Contents, application_settings->ip,
             // Maximum length of an IP address is 15 characters
             MUIA_String_MaxLen, 15,
           End,
@@ -90,8 +112,8 @@ static void draw() {
         // TODO: something like a CycleObject to select the alignment setting?
         // TODO: Mui knob to select if the application should continously refresh or not
         Child, HGroup,
-          Child, SimpleButton("Save and exit"),
-          Child, SimpleButton("Cancel"),
+          Child, save_button = SimpleButton("Save and exit"),
+          Child, cancel_button = SimpleButton("Cancel"),
         End,
       End,
     End,
@@ -106,9 +128,13 @@ static void draw() {
   #ifdef __amigaos4__
   IIntuition->IDoMethod(application, MUIM_Application_Run);
   IIntuition->IDoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+  IIntuition->DoMethod(save_button, MUIM_Notify, MUIA_Pressed, FALSE, application, 2, MUIM_Application_ReturnID, SAVE_BUTTON_PRESS);
+  IIntuition->DoMethod(cancel_button, MUIM_Notify, MUIA_Pressed, FALSE, application, 2, MUIM_Application_ReturnID, CANCEL_BUTTON_PRESS);
   #else
   DoMethod(application, MUIM_Application_Run);
   DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+  DoMethod(save_button, MUIM_Notify, MUIA_Pressed, FALSE, application, 2, MUIM_Application_ReturnID, SAVE_BUTTON_PRESS);
+  DoMethod(cancel_button, MUIM_Notify, MUIA_Pressed, FALSE, application, 2, MUIM_Application_ReturnID, CANCEL_BUTTON_PRESS);
   #endif
 
   BOOL window_open = TRUE;
@@ -120,8 +146,12 @@ static void draw() {
     ULONG id = DoMethod(application, MUIM_Application_Input, &signals);
 #endif
     
-    if(MUIV_Application_ReturnID_Quit == id) {
+    if(MUIV_Application_ReturnID_Quit == id || CANCEL_BUTTON_PRESS == id) {
       window_open = FALSE;
+    }
+
+    if (SAVE_BUTTON_PRESS == id) {
+      handleSave();
     }
     
     if(signals && window_open) {
