@@ -31,10 +31,8 @@ static void handleSave() {
   char* ip_input;
   get(ip_input_box, MUIA_String_Contents, &ip_input);
 
-  // TODO: should we free the current one? maybe have a Settings_ function to handle something like this to avoid low level string operations everywhere
-   // TODO: something we do here causes a memory issue on failure... why!??
-  free(application_settings->ip);
-  application_settings->ip = strndup(ip_input, 16);
+  // TODO: maybe have a Settings_ function to handle something like this to avoid low level string operations everywhere
+  strncpy(application_settings->ip, ip_input, 16);
 
   Settings_WriteSettingsToFile(application_settings, DEFAULT_SETTINGS_FILENAME);
 }

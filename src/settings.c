@@ -32,7 +32,8 @@ struct ApplicationSettings *Settings_ReadFromFile(const char *filename) {
 
 struct ApplicationSettings *Settings_Default() {
   struct ApplicationSettings* settings = calloc(1, sizeof(struct ApplicationSettings));
-  settings->ip = strndup("10.0.0.6", 16);
+  settings->ip = calloc(16, sizeof(char));
+  strncpy(settings->ip, "10.0.0.6", 16);
   settings->number_boxes_alignment = RIGHT;
   // TODO: the rest of the defaults
   return settings;
