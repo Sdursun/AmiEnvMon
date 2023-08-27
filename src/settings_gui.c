@@ -70,7 +70,7 @@ static void handleSave() {
   //free(application_settings->ip);
   application_settings->ip = strndup(ip_input, 16);
 
-  Settings_WriteSettingsToFile(application_settings, "amienvmon_settings");
+  Settings_WriteSettingsToFile(application_settings, DEFAULT_SETTINGS_FILENAME);
 
   // TODO: should we exit once done?
 }
@@ -175,7 +175,7 @@ static void draw() {
 
 int main(int argc, char *argv[]) {
   // read current settings if available
-  application_settings = Settings_ReadFromFile("amienvmon_settings");
+  application_settings = Settings_ReadFromFile(DEFAULT_SETTINGS_FILENAME);
 
   // default to some nice defaults if no current settings are created
   if (NULL == application_settings) {

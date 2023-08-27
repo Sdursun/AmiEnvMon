@@ -3,6 +3,8 @@
 
 // basic file for settings loading, settings struct, writing and reading the binary format
 
+#define DEFAULT_SETTINGS_FILENAME "amienvmon_settings"
+
 enum TextBoxAlignment {
   LEFT, RIGHT, CENTER
 };
@@ -19,8 +21,9 @@ struct ApplicationSettings *Settings_ReadFromFile(const char* filename);
 // Gives some sensible defaults to the settings
 struct ApplicationSettings *Settings_Default();
 
-// TODO: should we return a status or similar here? or just assume that writing
-// will not fail
+// TODO: should we abstract away the setting of fields? or should the consumers just do that themselves?
+
+// Writes the settings object to file
 void Settings_WriteSettingsToFile(struct ApplicationSettings* settings, const char* filename);
 
 // Cleans up memory for the application settings struct.

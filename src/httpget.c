@@ -4,14 +4,14 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-char* httpget() {
+char* httpget(const char* base_url) {
   int socket_fd;
   struct sockaddr_in server_connection_info;
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
   server_connection_info.sin_family = AF_INET;
   // TODO: configurable server URL somewhere
-  server_connection_info.sin_addr.s_addr = inet_addr("10.0.0.3");
+  server_connection_info.sin_addr.s_addr = inet_addr(base_url);
   server_connection_info.sin_port = htons(80);
 
   if(0 != connect(socket_fd, &server_connection_info, sizeof(server_connection_info))) {
