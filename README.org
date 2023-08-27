@@ -19,7 +19,6 @@ I had a few goals with this project:
 - Use modern CI/CD to test and release using Github Actions.
 
 
-
 ** Requirements
 *** OS 3.x (m68k)
 - TCP/IP stack like [[http://roadshow.apc-tcp.de/index-en.php][Roadshow]] to provide BSDSocket.library
@@ -28,6 +27,10 @@ I had a few goals with this project:
 *** OS 4 (ppc)
 - Internet connection set up... duh... (at least access to your local network)
 - MUI version 5
+** Usage
+Before you run the =AmiEnvMon= program, make sure the correct IP is set in the =Settings= program. Currently the fetching of the data from the server will never time out, so the IP should be correct. This might be fixed in a future release.
+
+
 
 ** About the coding style
 *NB: The filenames and minor naming will probably change.*
