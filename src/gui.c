@@ -1,4 +1,5 @@
 #include "envmondata.h"
+#include "exec/types.h"
 #include "proto/muimaster.h"
 #include "libraries/mui.h"
 #include "libraries/gadtools.h"
@@ -6,42 +7,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "amiga_libraries.h"
+
 #ifdef __amigaos4__
 #include "inline4/muimaster.h"
 #endif
 
-// need to open these ourselves when using MUI with clib2
-#ifdef __amigaos4__
-struct MUIMasterIFace *IMUIMaster;
-struct Library* MUIMasterBase;
-#else
-struct MUIMasterIFace *IMUIMaster;
-struct Library* MUIMasterBase;
-struct IntuitionBase* IntuitionBase;
-#endif
-
 struct EnvironmentMonitorData* envmondata;
-
-static void initLibraries() {
-  // TODO: why isn't mui version 20 working at my end?
-#ifdef __amigaos4__
-  MUIMasterBase = IExec->OpenLibrary("muimaster.library", MUIMASTER_VMIN);
-  IMUIMaster = IExec->GetInterface(MUIMasterBase, "main", 1, NULL);
-#else
-  MUIMasterBase = OpenLibrary("muimaster.library", MUIMASTER_VMIN);
-  IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 37);
-#endif
-}
-
-static void closeLibraries() {
-#ifdef __amigaos4__
-  IExec->DropInterface(IMUIMaster);
-  IExec->CloseLibrary(MUIMasterBase);
-#else
-  CloseLibrary(MUIMasterBase);
-  CloseLibrary(IntuitionBase);  
-#endif
-}
 
 void GUI_SetEnvMonData(struct EnvironmentMonitorData *data) {
   envmondata = data;
@@ -66,22 +38,20 @@ static char *createECO2String() {
   return result;
 }
 
-#define MENUSTRIP_SETTINGS 1
-#define MENUSTRIP_QUIT 2
+#define MENUSTRIP_QUIT 1
 
 static struct NewMenu menustrip[] = {
   { NM_TITLE, "File", 0, 0, 0, 0 },
-  { NM_ITEM, "Settings", 0, 0, 0, MENUSTRIP_SETTINGS },
   { NM_ITEM, "Quit", "Q", 0, 0, MENUSTRIP_QUIT },
   { NM_END, NULL, 0, 0, 0, 0 }
 };
 
 void GUI_Draw() {
-  initLibraries();
+  Amiga_InitLibraries();
 
   APTR application;
   APTR window;
-
+  
   char* temperature_string = createTemperatureString();
   char* eco2_string = createECO2String();
   
@@ -190,5 +160,5 @@ void GUI_Draw() {
   #endif
   
   MUI_DisposeObject(application);
-  closeLibraries();
+  Amiga_CloseLibraries();
 }

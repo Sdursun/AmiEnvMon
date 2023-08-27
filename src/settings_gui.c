@@ -10,50 +10,16 @@
 #include "envmondata.h"
 #include "settings.h"
 
+#include "amiga_libraries.h"
+
 #ifdef __amigaos4__
 #include "inline4/muimaster.h"
 #endif
 
-// TODO: maybe there should be a common settings header? that way we can maybe have a struct we read data to (or writes from). Maybe just reading a simple binary file? 
-
-
 // TODO: see if there is a nice and easy way I can combine settings + main program in the way I want it to work..
-//       a bit more duplicate code than I would like. Probably okay to keep it simple...
-//       Putting the library init in a common place is probably a good idea
-
-// need to open these ourselves when using MUI with clib2
-#ifdef __amigaos4__
-struct MUIMasterIFace *IMUIMaster;
-struct Library* MUIMasterBase;
-#else
-struct MUIMasterIFace *IMUIMaster;
-struct Library* MUIMasterBase;
-struct IntuitionBase* IntuitionBase;
-#endif
-
-static void initLibraries() {
-  // TODO: why isn't mui version 20 working at my end?
-#ifdef __amigaos4__
-  MUIMasterBase = IExec->OpenLibrary("muimaster.library", MUIMASTER_VMIN);
-  IMUIMaster = IExec->GetInterface(MUIMasterBase, "main", 1, NULL);
-#else
-  MUIMasterBase = OpenLibrary("muimaster.library", MUIMASTER_VMIN);
-  IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 37);
-#endif
-}
-
-static void closeLibraries() {
-#ifdef __amigaos4__
-  IExec->DropInterface(IMUIMaster);
-  IExec->CloseLibrary(MUIMasterBase);
-#else
-  CloseLibrary(MUIMasterBase);
-  CloseLibrary(IntuitionBase);  
-#endif
-}
 
 
-struct ApplicationSettings* application_settings;
+static struct ApplicationSettings* application_settings;
 
 #define SAVE_BUTTON_PRESS 1
 #define CANCEL_BUTTON_PRESS 2
@@ -63,16 +29,14 @@ static APTR ip_input_box;
 static void handleSave() {
   // TODO: handle input fields, maybe IP validation(?), and writing to file
   char* ip_input;
-  size_t get_result = get(ip_input_box, MUIA_String_Contents, &ip_input);
+  get(ip_input_box, MUIA_String_Contents, &ip_input);
 
-  
   // TODO: should we free the current one? maybe have a Settings_ function to handle something like this to avoid low level string operations everywhere
-  //free(application_settings->ip);
+   // TODO: something we do here causes a memory issue on failure... why!??
+  free(application_settings->ip);
   application_settings->ip = strndup(ip_input, 16);
 
   Settings_WriteSettingsToFile(application_settings, DEFAULT_SETTINGS_FILENAME);
-
-  // TODO: should we exit once done?
 }
 
 static void draw() {
@@ -152,6 +116,7 @@ static void draw() {
 
     if (SAVE_BUTTON_PRESS == id) {
       handleSave();
+      window_open = FALSE;
     }
     
     if(signals && window_open) {
@@ -183,9 +148,9 @@ int main(int argc, char *argv[]) {
   }
   
   // rendering and amiga specific logic
-  initLibraries();
+  Amiga_InitLibraries();
   draw();
-  closeLibraries();
+  Amiga_CloseLibraries();
 
   // clean up settings data memory
   Settings_Destroy(application_settings);
