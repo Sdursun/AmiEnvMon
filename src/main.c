@@ -26,5 +26,6 @@ int main() {
   GUI_Draw();
 
   EnvMon_Destroy(envmondata);
+  Settings_Destroy(application_settings);
   return 0;
 }
