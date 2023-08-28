@@ -42,7 +42,11 @@ static void draw() {
   APTR window;
   APTR cancel_button;
   APTR save_button;
-   
+
+  static char *alignment_options[] = {
+    "Left", "Right", "Center", NULL
+  };
+  
   application = ApplicationObject,
     MUIA_Application_Title, "AmiEnvMon - Settings",
     MUIA_Application_Version, "$VER: 0.0.1",
@@ -61,6 +65,7 @@ static void draw() {
       MUIA_Window_SizeGadget, FALSE,
 
       WindowContents, VGroup,
+        // TODO: make the info labels aligned to make the ui prettier
         Child, HGroup,
           Child, TextObject,
             MUIA_Text_Contents, "IP/URL:",
@@ -71,7 +76,14 @@ static void draw() {
             MUIA_String_MaxLen, 15,
           End,
         End,
-        // TODO: something like a CycleObject to select the alignment setting?
+        Child, HGroup,
+          Child, TextObject,
+            MUIA_Text_Contents, "Textbox alignment:",
+          End,
+          Child, CycleObject,
+            MUIA_Cycle_Entries, alignment_options,
+          End,
+        End,
         // TODO: Mui knob to select if the application should continously refresh or not
         Child, HGroup,
           Child, save_button = SimpleButton("Save and exit"),
