@@ -25,6 +25,7 @@ static struct ApplicationSettings* application_settings;
 #define CANCEL_BUTTON_PRESS 2
 
 static APTR ip_input_box;
+static APTR textbox_alignment_selector;
 
 static void handleSave() {
   // TODO: handle input fields, maybe IP validation(?), and writing to file
@@ -33,7 +34,13 @@ static void handleSave() {
 
   // TODO: maybe have a Settings_ function to handle something like this to avoid low level string operations everywhere
   strncpy(application_settings->ip, ip_input, 16);
-
+  
+  // get the alignment setting
+  // TODO: write this better. Now it is just using the stupid assumption that ordering is the same for the enum and internal array
+  enum TextBoxAlignment alignment;
+  get(textbox_alignment_selector, MUIA_Cycle_Active, &alignment);
+  application_settings->number_boxes_alignment = alignment;
+  
   Settings_WriteSettingsToFile(application_settings, DEFAULT_SETTINGS_FILENAME);
 }
 
@@ -80,7 +87,9 @@ static void draw() {
           Child, TextObject,
             MUIA_Text_Contents, "Textbox alignment:",
           End,
-          Child, CycleObject,
+          Child, textbox_alignment_selector = CycleObject,
+            // TODO: find a better method than using the same array index and enum...
+            MUIA_Cycle_Active, application_settings->number_boxes_alignment,
             MUIA_Cycle_Entries, alignment_options,
           End,
         End,

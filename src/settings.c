@@ -18,6 +18,7 @@ struct ApplicationSettings *Settings_ReadFromFile(const char *filename) {
   //       16 = 15 characters ip + nul byte
   settings->ip = calloc(16, sizeof(char));
   data_read = fread(settings->ip, sizeof(char), 16, settings_file);
+  fread(&settings->number_boxes_alignment, sizeof(enum TextBoxAlignment), 1, settings_file);
 
   // TODO: can we handle this in a more clean way? if we read more settings, there will be multiple of these..
   if (0 >= data_read) {
@@ -34,7 +35,7 @@ struct ApplicationSettings *Settings_Default() {
   struct ApplicationSettings* settings = calloc(1, sizeof(struct ApplicationSettings));
   settings->ip = calloc(16, sizeof(char));
   strncpy(settings->ip, "10.0.0.6", 16);
-  settings->number_boxes_alignment = RIGHT;
+  settings->number_boxes_alignment = LEFT;
   // TODO: the rest of the defaults
   return settings;
 }
@@ -51,6 +52,7 @@ void Settings_WriteSettingsToFile(struct ApplicationSettings *settings,
   }
   
   fwrite(settings->ip, sizeof(char), 16, settings_file);
+  fwrite(&settings->number_boxes_alignment, sizeof(enum TextBoxAlignment), 1, settings_file);
   // TODO: other settings
 
   fclose(settings_file);

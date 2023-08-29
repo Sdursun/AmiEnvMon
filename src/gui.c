@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #include "amiga_libraries.h"
+#include "settings.h"
 
 #ifdef __amigaos4__
 #include "inline4/muimaster.h"
@@ -15,26 +16,49 @@
 
 struct EnvironmentMonitorData* envmondata;
 
+struct ApplicationSettings* application_settings;
+
 void GUI_SetEnvMonData(struct EnvironmentMonitorData *data) {
   envmondata = data;
 }
 
-#define MAX_STRING_LENGTH 8
+// TODO: is this the best way to provide the settings to the GUI? Same with the env mon data..?
+void GUI_SetSettings(struct ApplicationSettings* settings) {
+  application_settings = settings;
+}
+
+#define MAX_STRING_LENGTH 10
+
+static char getTextAlignmentControlCharFromEnum(enum TextBoxAlignment alignment) {
+  switch (alignment) {
+  case LEFT:
+    return 'l';
+  case RIGHT:
+    return 'r';
+  case CENTER:
+    return 'c';
+  }
+
+  // wtf can we even return in this case lol
+  return ' ';
+}
 
 // TODO: prettify. Always a bit sceptical of global variable shit
 // also, free it yourself biatch
 static char *createTemperatureString() {
   // keycode found from:
   // https://wiki.amigaos.net/wiki/Keymap_Library
-  static const char degree_symbol = 176;
+  static const char degree_symbol = (char)176;
+  char alignment_character = getTextAlignmentControlCharFromEnum(application_settings->number_boxes_alignment);
   char* result = calloc(MAX_STRING_LENGTH + 1, sizeof(char));
-  snprintf(result, MAX_STRING_LENGTH, "%.1f %cC", envmondata->temperature, degree_symbol);
+  snprintf(result, MAX_STRING_LENGTH, "\33%c%.1f %cC", alignment_character, envmondata->temperature, degree_symbol);
   return result;
 }
 
 static char *createECO2String() {
+  char alignment_character = getTextAlignmentControlCharFromEnum(application_settings->number_boxes_alignment);
   char* result = calloc(MAX_STRING_LENGTH + 1, sizeof(char));
-  snprintf(result, MAX_STRING_LENGTH, "%d ppm", envmondata->eCO2);
+  snprintf(result, MAX_STRING_LENGTH, "\33%c%d ppm", alignment_character, envmondata->eCO2);
   return result;
 }
 

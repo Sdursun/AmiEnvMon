@@ -23,6 +23,7 @@ int main() {
   free(json_body);
   
   GUI_SetEnvMonData(envmondata);
+  GUI_SetSettings(application_settings);
   GUI_Draw();
 
   EnvMon_Destroy(envmondata);
