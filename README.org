@@ -30,7 +30,28 @@ I had a few goals with this project:
 ** Usage
 Before you run the =AmiEnvMon= program, make sure the correct IP is set in the =Settings= program. Currently the fetching of the data from the server will never time out, so the IP should be correct. This might be fixed in a future release.
 
+*** ARexx commands
+AmiEnvMon provides the commands =temperature=, =eco2= and =humidity= to get the corresponding data as strings in your ARexx scripts. They all take zero arguments. Why even have this? I wanted to experiment with how one would add ARexx commands to a MUI program :)
 
+Example program:
+#+BEGIN_SRC rexx
+/* Simple environment monitor example */
+options results
+ADDRESS 'AMIENVMON.1'
+
+'temperature'
+temperature = result
+
+'eco2'
+eco2 = result
+
+'humidity'
+humidity = result
+
+say 'Temperature is ' temperature ' celsius'
+say 'ECO2 levels ' eco2 ' ppm'
+say 'Humidity is at ' humidity ' %'
+#+END_SRC
 
 ** About the coding style
 *NB: The filenames and minor naming will probably change.*

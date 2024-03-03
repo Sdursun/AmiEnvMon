@@ -1,5 +1,7 @@
+#include "dos/dos.h"
 #include "envmondata.h"
 #include "exec/types.h"
+#include "intuition/classusr.h"
 #include "proto/muimaster.h"
 #include "libraries/mui.h"
 #include "libraries/gadtools.h"
@@ -70,10 +72,60 @@ static struct NewMenu menustrip[] = {
   { NM_END, NULL, 0, 0, 0, 0 }
 };
 
+// needed globally for things like arexx commands
+APTR application;
+
+#ifndef __amigaos4__ 
+// ARexx commands/ports for the application (OS3 only)
+// TODO: see if this fits better in another place
+static APTR arexxGetTemperature(struct Hook *hook,
+                                Object *obj,
+                                ULONG *arg) {
+  // yolo on the error checking for now
+  char* result = calloc(MAX_STRING_LENGTH + 1, sizeof(char));
+  snprintf(result, MAX_STRING_LENGTH, "%0.1f", envmondata->temperature);
+  set(application, MUIA_Application_RexxString, result);
+  free(result);
+  return 0;
+}
+
+static APTR arexxGetECO2(struct Hook *hook,
+                         Object *obj,
+                         ULONG *arg) {
+  // yolo on the error checking for now
+  char* result = calloc(MAX_STRING_LENGTH + 1, sizeof(char));
+  snprintf(result, MAX_STRING_LENGTH, "%d", envmondata->eCO2);
+  set(application, MUIA_Application_RexxString, result);
+  free(result);
+  return 0;
+}
+
+static APTR arexxGetHumidity(struct Hook *hook,
+                             Object *obj,
+                             ULONG *arg) {
+  // yolo on the error checking for now
+  char* result = calloc(MAX_STRING_LENGTH + 1, sizeof(char));
+  snprintf(result, MAX_STRING_LENGTH, "%0.1f", envmondata->humidity);
+  set(application, MUIA_Application_RexxString, result);
+  free(result);
+  return 0;
+}
+
+static struct Hook arexx_get_temperature_hook = {{NULL, NULL}, (void*)arexxGetTemperature, NULL, NULL};
+static struct Hook arexx_get_eco2_hook = {{NULL, NULL}, (void *)arexxGetECO2, NULL, NULL};
+static struct Hook arexx_get_humidity_hook = {{NULL, NULL}, (void*)arexxGetHumidity, NULL, NULL};
+
+static struct MUI_Command arexx_commands[] = {
+  {"temperature", NULL, 0, &arexx_get_temperature_hook},
+  {"eco2", NULL, 0, &arexx_get_eco2_hook},
+  {"humidity", NULL, 0, &arexx_get_humidity_hook},
+  { NULL, NULL, NULL, NULL}
+};
+#endif
+
 void GUI_Draw() {
   Amiga_InitLibraries();
 
-  APTR application;
   APTR window;
   
   char* temperature_string = createTemperatureString();
@@ -83,7 +135,8 @@ void GUI_Draw() {
     MUIA_Application_Title, "AmiEnvMon",
     MUIA_Application_Version, "$VER: 0.0.1",
     MUIA_Application_Description, "Simple environment monitor for Amiga",
-    MUIA_Application_Base, "PROGRAM",
+    MUIA_Application_Base, "AMIENVMON",
+    MUIA_Application_Commands, arexx_commands,
     MUIA_Application_Menustrip, MUI_MakeObject(MUIO_MenustripNM, menustrip, 0),
     
     SubWindow, window = WindowObject,
