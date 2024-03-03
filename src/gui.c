@@ -136,7 +136,9 @@ void GUI_Draw() {
     MUIA_Application_Version, "$VER: 0.0.1",
     MUIA_Application_Description, "Simple environment monitor for Amiga",
     MUIA_Application_Base, "AMIENVMON",
+    #ifndef __amigaos4__
     MUIA_Application_Commands, arexx_commands,
+    #endif
     MUIA_Application_Menustrip, MUI_MakeObject(MUIO_MenustripNM, menustrip, 0),
     
     SubWindow, window = WindowObject,
